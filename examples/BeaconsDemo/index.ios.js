@@ -25,8 +25,8 @@ import moment                 from 'moment';
 * uuid of YOUR BEACON (change to yours)
 * @type {String} uuid
 */
-const UUID        = '7b44b47b-52a1-5381-90c2-f09b6838c5d4';
-const IDENTIFIER  = '123456';
+const UUID        = '416C0120-5960-4280-A67C-A2A9BB166D0F';
+const IDENTIFIER  = 'Identifier';
 const TIME_FORMAT = 'HH:mm:ss';
 const EMPTY_BEACONS_LISTS = {
   rangingList:      [],
@@ -103,6 +103,7 @@ class BeaconsDemo extends Component {
     DeviceEventEmitter.addListener(
       'regionDidEnter',
       ({uuid, identifier}) => {
+        Beacons.sendLocalNotification();
         console.log('regionDidEnter, data: ', {uuid, identifier});
         const time = moment().format(TIME_FORMAT);
         const updatedBeaconsLists = this.updateBeaconList({uuid, identifier, time}, 'monitorEnterList');
