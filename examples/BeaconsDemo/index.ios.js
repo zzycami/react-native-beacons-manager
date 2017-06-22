@@ -92,6 +92,22 @@ class BeaconsDemo extends Component {
     DeviceEventEmitter.addListener(
       'beaconsDidRange',
       (data) => {
+        var beacon = data.beacons[0];
+
+        fetch('https://facebook.github.io/react-native/movies.json')
+        .then((response) => response.json())
+        .then((responseJson) => {
+          var notification = {};
+          notification.title = "温馨提醒";
+          notification.body = "您已经达到预约的房间，点击打开应用进行签到"+responseJson;
+          Beacons.sendLocalNotification(notification);
+          const region = { "identifier":IDENTIFIER, "uuid":UUID };
+          Beacons.stopRangingBeaconsInRegion(region);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
         console.log('beaconsDidRange, data: ', data);
         const updatedBeaconsLists = this.updateBeaconList(data.beacons, 'rangingList');
         this._beaconsLists = updatedBeaconsLists;
@@ -102,8 +118,9 @@ class BeaconsDemo extends Component {
     // monitoring events
     DeviceEventEmitter.addListener(
       'regionDidEnter',
-      ({uuid, identifier}) => {
-        Beacons.sendLocalNotification();
+      ({uuid, identifier, major, minor}) => {
+        const region = { identifier, uuid };
+        Beacons.startRangingBeaconsInRegion(region);
         console.log('regionDidEnter, data: ', {uuid, identifier});
         const time = moment().format(TIME_FORMAT);
         const updatedBeaconsLists = this.updateBeaconList({uuid, identifier, time}, 'monitorEnterList');
@@ -111,9 +128,10 @@ class BeaconsDemo extends Component {
         this.setState({ beaconsLists: this.state.beaconsLists.cloneWithRowsAndSections(this._beaconsLists)});
       }
     );
+
     DeviceEventEmitter.addListener(
       'regionDidExit',
-      ({ identifier, uuid, minor, major }) => {
+      ({ identifier, uuid, minor, major}) => {
         console.log('regionDidExit, data: ', {identifier, uuid, minor, major});
         const time = moment().format(TIME_FORMAT);
         const updatedBeaconsLists = this.updateBeaconList({ identifier, uuid, minor, major, time }, 'monitorExitList');

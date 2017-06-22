@@ -39,8 +39,13 @@
 	<string>WRITE YOUR MESSAGE (OR LEAVE BLANK) TO EXPLAIN USER WHY YOU NEED LOCATION SERVICE</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+		<string>fetch</string>
 		<string>location</string>
+		<string>newsstand-content</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
