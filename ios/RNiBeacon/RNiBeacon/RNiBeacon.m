@@ -24,10 +24,6 @@
 RCT_EXPORT_MODULE()
 @synthesize bridge = _bridge;
 
-- (NSArray<NSString *> *)supportedEvents {
-  return @[@"beaconsDidRange", @"authorizationStatusDidChange", @"regionDidEnter", @"regionDidExit", @"didDetermineState"];
-}
-
 #pragma mark Initialization
 
 - (instancetype)init {
@@ -214,7 +210,10 @@ RCT_EXPORT_METHOD(shouldDropEmptyRanges:(BOOL)drop) {
                               @"identifier": region.identifier,
                               @"uuid": [region.proximityUUID UUIDString],},
                           @"beacons": beaconArray};
-  [self sendEventWithName:@"beaconsDidRange" body:event];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  [self.bridge.eventDispatcher sendDeviceEventWithName:@"beaconsDidRange" body:event];
+#pragma clang diagnostic pop
 }
 
 -(void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLBeaconRegion *)region {
@@ -270,4 +269,5 @@ RCT_EXPORT_METHOD(shouldDropEmptyRanges:(BOOL)drop) {
 
 
 @end
+
 
